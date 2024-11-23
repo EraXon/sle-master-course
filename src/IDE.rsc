@@ -17,7 +17,6 @@ import Syntax;
 import Compile;
 import Check;
 import Resolve;
-import util::GenScript;
 import App;
 import Message;
 import ParseTree;

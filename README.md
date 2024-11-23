@@ -153,7 +153,7 @@ Lab: pick one of the following language extensions and modify/evolve/extend *all
     ```
 Think about how the type checker should deal with the constants vs. question names. 
 
-- Data validation plus errors on answerable questions: non-emptiness, ranges for integers, regular expression for string. At run-time these constraints should be checked, and the user should be notified. Possible syntax:
+- Data validation plus errors on answerable questions: non-emptiness, ranges for integers (which may refer to integer-typed questions), regular expression for string. At run-time these constraints should be checked, and the user should be notified. Possible syntax:
     ```
     "What is your age?" age: integer [1..99] // an integer range
     "What is your name?" name: string [required] // i.e. cannot be empty
@@ -196,6 +196,23 @@ Think about possible static errors or warnings.
 Extend the expression language with field access for record types. Type check that fields are correctly referenced. Make sure the record values are representable in the questionnaire state. 
 
 - Currency data type: extend QL with a `currency[x]` data type where `x` represents the name of a currency (e.g. euro, dollar etc.). Type check that different currencies are not added/subtracted. Check that only addition and subtraction are allowed, plus division/multiplication with an integer or a percentage (add this operator). At run-time ensure that computations are executed correctly w.r.t. rounding. Don't use JS's floats for this.  Render currencies *as* currencies. NB: this introduces operator overloading in QL. 
+
+- Modular QL: allow QL files to be divided into modules, and introduce an import statement to "include" (think about what that means!) one module into another. Extend the type checker so that modules are type checked against the signature  (e.g., the set of exported question names) of its imports. Make sure that name resolution deals with multiple modules. Introduce a normalization phases so that you can reuse the compiler. Possible syntax:
+    ```
+    module Tax {
+      ... // some questions
+      if (hasSoldHouse) {
+        import Housing
+      }
+    }
+
+    form "Tax filing" {
+      // a top-level form
+      "What is your name?" name: string
+      import Tax
+      import Finance
+    }
+    ```
 
 Background material: 
 - Language Composition Untangled, https://doi.org/10.1145/2427048.2427055
