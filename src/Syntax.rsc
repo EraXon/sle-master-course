@@ -10,15 +10,19 @@ lexical Str = [\"]![\"]* [\"];
 
 lexical Bool = "true" | "false";
 
-lexical Int = ; 
+lexical Int = [0-9]+ ; 
 
 // boolean, integer, string
-syntax Type = ;
+syntax Type = "boolean"|"integer"|"string";
 
 
 // TODO: answerable question, computed question, block, if-then-else
 syntax Question 
-  = ifThen: "if" "(" Expr cond ")" Question then () !>> "else" 
+  = ifThen: "if" "(" Expr cond ")" "{" Question* then "}"
+  | Str label Id id ":" Type type 
+  | Str label Id id ":" Type type "=" Expr value
+  | "if" "(" Expr cond ")" "{"Question* then "}" "else" "{" Question* else "}"
+  | "if" "(" Expr cond ")" "{"Question* then "}" "else" ifThen
   ;
 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
@@ -26,5 +30,11 @@ syntax Question
 // and use C/Java style precedence rules (look it up on the internet)
 syntax Expr
   = var: Id name \ "true" \"false"
-  ;
+  > left (Expr lhs "+" Expr rhs| sub: Expr lhs "-" Expr rhs)
+  > left (Expr lhs "*" Expr rhs| div: Expr lhs "/" Expr rhs)
+  > left (Expr lhs "&&" Expr rhs| Expr lhs "||" Expr rhs)
+  > left (Expr lhs "\>" Expr rhs| Expr lhs "\<" Expr rhs| Expr lhs "\<=" Expr rhs| Expr lhs "\>=" Expr rhs)
+  > left (Expr lhs "==" Expr rhs| Expr lhs "!=" Expr rhs)
+  | "!" Expr |"(" Expr ")" 
+  |Int|Bool|Str ;
 

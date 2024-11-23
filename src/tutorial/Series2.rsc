@@ -13,11 +13,11 @@ start syntax JSON
   = Object;
   
 syntax Object
-  = "{" {Element ","}* "}"
+  = "{" {Element ","}*  "}"
   ;
   
 syntax Element
-  = ; // Fill in  
+  = String  ":" Value ; // Fill in  
   
 syntax Value
   = String
@@ -32,8 +32,8 @@ syntax Null
   = "null";
   
 syntax Boolean
-  = // Fill in
-  | // Fill in
+  = "true"// Fill in
+  | "false"// Fill in
   ;  
   
 syntax Array
@@ -44,23 +44,41 @@ lexical String
   = [\"] ![\"]* [\"]; // slightly simplified
   
 lexical Number
-  = ; // Fill in. Hint; think of the pattern for numbers in regular expressions. How do you accept a number in a regex?  
+  =[0-9]+ ; // Fill in. Hint; think of the pattern for numbers in regular expressions. How do you accept a number in a regex?  
 
-layout Whitespace = [\ \t\n]* !>> [\ \t\n];  
+//layout Whitespace = [\ \t\n]* !>> [\ \t\n];  
   
+//layout Whitespace = [\t-\n \r \ ]* !>> [\t-\n \r \ ];  
+
+layout Whitespace = [\ \t\n\r]* !>> [\ \t\n\r];
+
 // import the module in the console
 start[JSON] example() 
   = parse(#start[JSON], 
           "{
-          '  \"age\": 42, 
+             \"age\": 42, 
+             \"name\": \"Joe\", 
+             \"address\": {
+             \"street\": \"Wallstreet\",
+             \"number\": 102
+          }
+          }");    
+  
+void example2() {
+  println("hi2");
+parse(#start[JSON], 
+          "{
+          '  \"age\": 42,
           '  \"name\": \"Joe\",
-          '  \"address\": {
+          '  \"address\":{
           '     \"street\": \"Wallstreet\",
-          '     \"number\": 102
+          '     \"number\": 102,
+                \"arr\":[
+                  {\"obj\":{\"number\": 102}},
+                  2,3,4,5,6,7,8,9,10]
           '  }
           '}");    
-  
-
+}
 
 // use visit/deep match to find all element names
 // - use concrete pattern matching
