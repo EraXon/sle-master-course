@@ -1,7 +1,9 @@
 module Resolve
 
 import Syntax;
-
+import IO;
+import Node;
+import ParseTree;
 /*
  * Name resolution for QL
  */ 
@@ -26,9 +28,23 @@ RefGraph resolve(start[Form] f) = <us, ds, us o ds>
   when Use us := uses(f), Def ds := defs(f);
 
 Use uses(start[Form] f) {
-  return {}; 
+
+  rel [loc, str] uses = { };
+  visit(f){
+    case var(Id id): uses += <id.src, "<id>">;
+  }
+
+  return uses; 
 }
 
 Def defs(start[Form] f) {
-  return {}; 
+
+  rel [str, loc] defs = { };
+  visit(f){
+    case answerableQuestion(_,Id id,_):  defs += <"<id>", id.src>;  
+    case computedQuestion(_,Id id,_,_): defs += <"<id>", id.src>;
+
+  }
+  return defs;
 }
+

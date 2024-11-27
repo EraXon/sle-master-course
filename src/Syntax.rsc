@@ -18,11 +18,11 @@ syntax Type = "boolean"|"integer"|"string";
 
 // TODO: answerable question, computed question, block, if-then-else
 syntax Question 
-  = ifThen: "if" "(" Expr cond ")" "{" Question* then "}"
-  | Str label Id id ":" Type type 
-  | Str label Id id ":" Type type "=" Expr value
-  | "if" "(" Expr cond ")" "{"Question* then "}" "else" "{" Question* else "}"
-  | "if" "(" Expr cond ")" "{"Question* then "}" "else" ifThen
+  = ifThen: "if" "(" Expr cond ")" Question then () !>> "else" 
+  | blockQuestion: "{" Question* questions "}"
+  | answerableQuestion: Str label Id id ":" Type type
+  | computedQuestion: Str label Id id ":" Type type "=" Expr value
+  | ifThenElse: "if" "(" Expr cond ")" Question then "else" Question else
   ;
 
 // TODO: +, -, *, /, &&, ||, !, >, <, <=, >=, ==, !=, literals (bool, int, str)
