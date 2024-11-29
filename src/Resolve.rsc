@@ -31,7 +31,7 @@ Use uses(start[Form] f) {
 
   rel [loc, str] uses = { };
   visit(f){
-    case var(Id id): uses += <id.src, "<id>">;
+    case (Expr) `<Id id>`: uses += {<id.src, "<id>">};
   }
 
   return uses; 
@@ -41,8 +41,8 @@ Def defs(start[Form] f) {
 
   rel [str, loc] defs = { };
   visit(f){
-    case answerableQuestion(_,Id id,_):  defs += <"<id>", id.src>;  
-    case computedQuestion(_,Id id,_,_): defs += <"<id>", id.src>;
+    case (Question)`<Str _> <Id id> : <Type _>` :  defs += {<"<id>", id.src>};  
+    case (Question)`<Str _> <Id id> : <Type _> = <Expr _>`: defs += {<"<id>", id.src>};
 
   }
   return defs;
