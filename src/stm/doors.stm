@@ -10,6 +10,10 @@ state opened
   close => closed
 end
 
+state opened
+end
+
+
 state bla 
   bla => undefined
 end
