@@ -7,12 +7,12 @@ import List;
 import util::Math;
 import lang::html::AST;
 import lang::html::IO;
-import util::Highlight;
 import String;
 
 import Check;
 import Eval;
 import ParseTree;
+
 extend Syntax;
 
 start syntax Tests = Section* sections;
@@ -178,62 +178,6 @@ set[Message] runTest(Test t, Spec spec) {
     return delta;
 }
 
-HTMLElement testResult2HTML(Test t, set[Message] msgs) {
-    HTMLElement elt = div([]);
-    
-    HTMLElement title = span([text(capitalize("<t.name>"[1..-1]) + (msgs == {} ? " ✅" : " ❌"))]);
-    
-    elt.elems += [h3([title])];
-
-    if (t has inputs) {
-        elt.elems += [h4([text("When given as input:")])];
-        
-        list[HTMLElement] rows = [];
-        for ((KeyVal)`<Id x>: <Expr v>`<- t.inputs) {
-            rows += [tr([td([text("<x>")]), td([text("<v>")])])];
-        }
-        
-        HTMLElement tbl = table([thead([tr([th([text("Question")]), th([text("Value")])])]), tbody(rows)]);
-        elt.elems += [tbl];
-    }
-
-    // source
-    str highlighted = highlight2html(t.form);
-    int indent = t.form.src.begin.column;
-    str spaces = ("" | it + " " | int _ <- [0..indent] );
-
-    //println("`<highlighted>`");
-    HTMLElement src = readHTMLString(highlighted);
-    //iprintln(src);
-    HTMLElement preElt = src.elems[1].elems[0]; // parser surrounds with html/body etc.
-    preElt.elems[0].elems = [text(spaces), *preElt.elems[0].elems]; // fix indentation
-    elt.elems += [preElt]; 
-
-    if (t has output) {
-        elt.elems += [h4([text("Should evaluate to:")])];
-        elt.elems += [pre([text("<t.output>")])];
-    }
-
-    if (t has ui) {
-        elt.elems += [h4([text("Should render as:")])];
-        list[HTMLElement] lst = [];
-        for (Question q <- t.ui.widgets) {
-            lst += [li([code([text("<q>")])],style="list-style-type: none;")];
-        }
-        elt.elems += [ul(lst)];
-    }
-
-    if (msgs != {}) {
-        list[HTMLElement] lst = [];
-        for (error(str txt, loc l) <- msgs) {
-            lst += li([text("error: <txt> at line <l.begin.line - t.form.src.begin.line>")]);
-        }
-        elt.elems += [h4([text("Errors:")]), ul(lst)];
-    }
-
-    return elt;
-}
-
 map[str, int] addDists(map[str, int] d1, map[str, int] d2) {
     for (str k <- d2) {
         d1[k] = (d1[k]?0) + d2[k];
@@ -244,17 +188,13 @@ map[str, int] addDists(map[str, int] d1, map[str, int] d2) {
 set[Message] runTests(start[Tests] tests) {
     set[Message] msgs = {};
     
-    list[HTMLElement] divs = [];
-
     map[str, int] coverage = ( x: 0 |  /prod(label(str x, _), _, _) := (#Form).definitions );
 
     for (Section section <- tests.top.sections) {
-        divs += [h2([text("<section.title>"[1..-1])])];
         for (Test t <- section.tests) {
             Spec spec = extractSpec(t);
             coverage = addDists(coverage, spec.dist);
             set[Message] tmsgs = runTest(t, spec);
-            divs += [testResult2HTML(t, tmsgs)];
             if (tmsgs != {}) {
                 msgs += tmsgs;
             }
@@ -263,19 +203,6 @@ set[Message] runTests(start[Tests] tests) {
             }
         }
     }
-
-    HTMLElement report = html([
-      lang::html::AST::head([
-        meta(name="viewport",content="width=device-width, initial-scale=1"),
-        meta(name="color-scheme",content="light dark"),
-    //    link(\rel="stylesheet", href="https://cdn.simplecss.org/simple.min.css"),
-        link(\rel="stylesheet", href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css"),
-        title([text(tests.src.file)])
-      ]),
-      body([main([section(divs)])])
-    ]);
-
-    writeHTMLFile(tests.src[extension="html"], report, charset="UTF-16", escapeMode=extendedMode());
 
     writeFile(tests.src.top[extension="cov"], coverage);
     return msgs;
