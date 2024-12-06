@@ -37,7 +37,6 @@ set[Message] check(start[Machine] m, RefGraph refs) {
 
     if (State initial <- m.top.states) {
         loc x = initial.name.src;
-        rel[loc, loc] closure = reach+;
         msgs += { error("unreachable state", d) |
             <_, loc d> <- refs.defs, d notin (reach+)[x] };
     }    
