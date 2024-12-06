@@ -19,7 +19,7 @@ SalixApp[Model] counterApp(str id = "root")
 App[Model] counterWebApp()
   = webApp(
       counterApp(),
-      |project://salix/src/main/rascal|
+      |project://sle-master-course/src|
     );
 
 

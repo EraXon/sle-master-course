@@ -49,7 +49,7 @@ SalixApp[Model] shopApp(str id = "shopDemo")
 App[Model] shopWebApp()
   = webApp(
       shopApp(), 
-      |project://salix/src/main/rascal|
+      |project://sle-master-course/src|
     ); 
 
 data Msg

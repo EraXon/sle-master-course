@@ -18,7 +18,7 @@ SalixApp[Model] randomApp(str id = "root")
   = makeApp(id, init, withIndex("Random", id, view), update);
 
 // Single
-App[Model] randomWebApp() = webApp(randomApp(), |project://salix/src/main/rascal|);
+App[Model] randomWebApp() = webApp(randomApp(), |project://sle-master-course/src|);
 
 
 alias Model = tuple[int dieFace];

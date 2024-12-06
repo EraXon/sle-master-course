@@ -15,7 +15,7 @@ import salix::Core;
 import util::Math;
 import salix::Index;
 
-App[Model] clockWebApp() = webApp(clockApp(), |project://salix/src/main/rascal|);
+App[Model] clockWebApp() = webApp(clockApp(), |project://sle-master-course/src|);
 
 SalixApp[Model] clockApp(str id = "root") 
   = makeApp(id, init, withIndex("Clock", id, view), update, subs=subs);
