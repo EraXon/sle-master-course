@@ -10,7 +10,7 @@ lexical Str = [\"]![\"]* [\"];
 
 lexical Bool = "true" | "false";
 
-lexical Int = [0-9]+ ; 
+lexical Int = [\-]?[0-9]+ ; 
 
 // boolean, integer, string
 syntax Type = "boolean"|"integer"|"string";
@@ -32,9 +32,10 @@ syntax Expr
   = var: Id name \ "true" \"false"
   > left (Expr lhs "+" Expr rhs| sub: Expr lhs "-" Expr rhs)
   > left (Expr lhs "*" Expr rhs| div: Expr lhs "/" Expr rhs)
-  > left (Expr lhs "&&" Expr rhs| Expr lhs "||" Expr rhs)
-  > left (Expr lhs "\>" Expr rhs| Expr lhs "\<" Expr rhs| Expr lhs "\<=" Expr rhs| Expr lhs "\>=" Expr rhs)
+  > left (Expr lhs "\>" Expr rhs | Expr lhs "\<" Expr rhs | Expr lhs "\<=" Expr rhs| Expr lhs "\>=" Expr rhs)
   > left (Expr lhs "==" Expr rhs| Expr lhs "!=" Expr rhs)
+  > left Expr lhs "&&" Expr rhs
+  > left  Expr lhs "||" Expr rhs
   | "!" Expr |"(" Expr ")" 
-  |Int|Bool|Str ;
+  |Int|Bool|Str;
 

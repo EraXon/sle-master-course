@@ -7,6 +7,8 @@ form "Demo" {
      ofAge: boolean
   "And another of age, but with a radio button if styling is used."
     ofAge2: boolean 
+
+
   if( theAge >= 18 && 
       ofAge == true && 
       ofAge == ofAge2 && 
