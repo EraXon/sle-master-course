@@ -37,5 +37,5 @@ syntax Expr
   > left Expr lhs "&&" Expr rhs
   > left  Expr lhs "||" Expr rhs
   | "!" Expr |"(" Expr ")" 
-  |Int|Bool|Str;
+  |Int i|Bool b|Str s;
 
