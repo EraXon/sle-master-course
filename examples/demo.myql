@@ -6,8 +6,7 @@ form "Demo" {
   "Are you 18 or older? This is the second part of the conditional (ofAge == true)"
      ofAge: boolean
   "And another of age, but with a radio button if styling is used."
-    ofAge2: boolean 
-
+    ofAge2: boolean
 
   if( theAge >= 18 && 
       ofAge == true && 
@@ -33,6 +32,6 @@ form "Demo" {
       weeklyIncome: integer = hourlyRate * hoursAWeek
   } else {
     "The conditional evaluated to false. You could be to young."
-      theAgeToYoung: boolean 
+      theAgeToYoung: boolean
   }
 }

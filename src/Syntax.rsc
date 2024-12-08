@@ -30,12 +30,14 @@ syntax Question
 // and use C/Java style precedence rules (look it up on the internet)
 syntax Expr
   = var: Id name \ "true" \"false"
-  > left (Expr lhs "+" Expr rhs| sub: Expr lhs "-" Expr rhs)
+  |"(" Expr ")" 
+  |Int i|Bool b|Str s|
+  "!" Expr 
   > left (Expr lhs "*" Expr rhs| div: Expr lhs "/" Expr rhs)
+  > left (Expr lhs "+" Expr rhs| sub: Expr lhs "-" Expr rhs)
   > left (Expr lhs "\>" Expr rhs | Expr lhs "\<" Expr rhs | Expr lhs "\<=" Expr rhs| Expr lhs "\>=" Expr rhs)
   > left (Expr lhs "==" Expr rhs| Expr lhs "!=" Expr rhs)
   > left Expr lhs "&&" Expr rhs
-  > left  Expr lhs "||" Expr rhs
-  | "!" Expr |"(" Expr ")" 
-  |Int i|Bool b|Str s;
+  > left  Expr lhs "||" Expr rhs;
+
 

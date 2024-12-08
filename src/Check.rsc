@@ -180,16 +180,25 @@ default set[Message] check(Question _, TEnv _) = {};
 
 
 set[Message] check(x:(Question)`<Str label> <Id id> : <Type t> = <Expr v>`, TEnv env) = 
-    {error("invalid expression type", x.src)|  t!:= typeOf(v,env) }+
+    {error("invalid expression type", v.src)|  t!:= typeOf(v,env) }+
     check(v, env);
 
 set[Message] check(x:(Question)`if ( <Expr cond>) <Question then>`, TEnv env) =
-    {error("invalid condition type", x.src)|  (Type)`boolean`!:= typeOf(cond,env) }+
-    check(then, env)+check(cond, env);
+    {error("invalid condition type", cond.src)|  (Type)`boolean`!:= typeOf(cond,env) }+
+    check(then, env)+check(cond, env)+
+    {warning("Useless condition",cond.src)| (Expr)`true`:=cond}+
+    {warning("Empty if branch",then.src)| (Question)`{}`:=then}+
+    {warning("Dead then branch",then.src)| (Expr)`false`:=cond};
 
 set[Message] check(x:(Question)`if ( <Expr cond> ) <Question then> else <Question else1>`, TEnv env) =
-    {error("invalid condition type", x.src)|  (Type)`boolean`!:= typeOf(cond,env) }+
-    check(then, env)+check(else1, env)+check(cond, env);
+    {error("invalid condition type", cond.src)|  (Type)`boolean`!:= typeOf(cond,env) }+
+    check(then, env)+check(else1, env)+check(cond, env)+
+    {warning("Dead else branch",cond.src)| (Expr)`true`:=cond}+
+    {warning("Empty if branch",then.src)| (Question)`{}`:=then}+
+    {warning("Empty else branch",else1.src)| (Question)`{}`:=else1}+
+    {warning("Dead then branch",then.src)| (Expr)`false`:=cond};
+
+
 
 set[Message] check(x:(Question)`{ <Question* questions >}`, TEnv env) =
     { *check(q, env) | Question q <- questions };
@@ -216,8 +225,10 @@ set[Message] check(x:(Expr)`<Expr lhs> - <Expr rhs>`, TEnv env) = arthimethicErr
 
 
 set[Message] arthimethicErrors(Expr e,Expr lhs, Expr rhs, TEnv env) = 
-    {error("invalid operand", e.src)|  (Type)`integer`!:= typeOf(lhs, env) } + {error("invalid operand", e.src)|(Type)`integer`!:= typeOf(rhs, env)}+
+    {error("invalid operand", lhs.src)|  (Type)`integer`!:= typeOf(lhs, env) } + {error("invalid operand", rhs.src)|(Type)`integer`!:= typeOf(rhs, env)}+
     check(lhs, env) + check(rhs, env);
+
+
 
 
 
@@ -229,7 +240,7 @@ set[Message] check(x:(Expr)`<Expr lhs> || <Expr rhs>`, TEnv env) = logicErrors(x
 
 
 set[Message] logicErrors(Expr e,Expr lhs, Expr rhs, TEnv env) = 
-    {error("invalid operand", e.src)|  (Type)`boolean`!:= typeOf(lhs, env) } + {error("invalid operand", e.src)|(Type)`boolean`!:= typeOf(rhs, env)}+
+    {error("invalid operand", lhs.src)|  (Type)`boolean`!:= typeOf(lhs, env) } + {error("invalid operand", rhs.src)|(Type)`boolean`!:= typeOf(rhs, env)}+
     check(lhs, env) + check(rhs, env);  
 
 
