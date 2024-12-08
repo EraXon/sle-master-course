@@ -27,7 +27,7 @@ SalixApp[Model] loopApp(str id = "root")
   = makeApp(id, init, withIndex("Loop", id, view), update); 
 
 App[Model] loopWebApp() 
-  = webApp(loopApp(), |project://salix/src/main/rascal|);
+  = webApp(loopApp(), |project://sle-master-course/src|);
 
 data Msg
   = addNumber(int n)

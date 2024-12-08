@@ -38,7 +38,7 @@ SalixApp[Model] todoMVCApp(str id = "todoMVC")
 App[Model] todoMVCWebApp() 
   = webApp(
       todoMVCApp(), 
-      |project://salix/src/main/rascal|
+      |project://sle-master-course/src|
     );
   
 Model emptyModel() = <[], "", 0, "All">;

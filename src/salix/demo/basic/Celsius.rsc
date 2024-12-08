@@ -29,7 +29,7 @@ SalixApp[Model] celsiusApp(str id = "root")
 App[Model] celsiusWebApp() 
   = webApp(
       celsiusApp(),
-      |project://salix/src/main/rascal|
+      |project://master-sle-course/src|
     ); 
 
 Model init() = 37.0;
