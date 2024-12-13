@@ -18,12 +18,10 @@ public class doors {
               
               if ($e.equals("open")) {
                   $current = opened;
-                  break;
               }
               
               if ($e.equals("lock")) {
                   $current = locked;
-                  break;
               }
               
               break;
@@ -33,7 +31,6 @@ public class doors {
               
               if ($e.equals("close")) {
                   $current = current;
-                  break;
               }
               
               break;
@@ -43,7 +40,6 @@ public class doors {
               
               if ($e.equals("e")) {
                   $current = current;
-                  break;
               }
               
               break;

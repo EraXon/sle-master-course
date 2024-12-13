@@ -67,7 +67,6 @@ str state2case((State)`state <Id name> <Trans* ts> end`)
     '  <for ((Trans)`<Id event> =\> <Id trg>` <- ts) {>
     '  if ($e.equals(\"<event>\")) {
     '      $current = <trg>;
-    '      break;
     '  }
     '  <}>
     '  break;
