@@ -2,15 +2,15 @@ machine Doors
 
 // a comment
 
-state closed
+state current
   open => opened
   lock => locked
 end
 
 state opened
-  close => closed
+  close => current
 end
 
 state locked
-  unlock => closed
+  e => current
 end
