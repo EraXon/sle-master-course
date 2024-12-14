@@ -45,10 +45,79 @@ Model update(Msg msg, Model model) = model[env=eval(model.form, msg2input(msg), 
 // nesting of void-closures.
 void view(Model model) {
     h3("<model.form.top.title>"[1..-1]);
-    // fill in the rest
+    form((){
+      for(Question question<-model.form.top.questions){
+        viewQuestion(question, model);
+      }
+    });
 }
 
 // fill in: question rendering, but only if they are enabled.
 void viewQuestion(Question q, Model model) {
+  switch(q){
+    case (Question)`if ( <Expr cond>) <Question then>`:{
+      if(eval(cond, model.env) == vbool(true)){
+        viewQuestion(then, model);
+      }
+    }
+    case (Question)`if ( <Expr cond>) <Question then> else <Question e>`:{
+      if(eval(cond, model.env) == vbool(true)){
+        viewQuestion(then, model);
+      } else {
+        viewQuestion(e, model);
+      }
+    }
+    case (Question)`{ <Question* questions >}`:{
+      for(Question question<-questions){
+        viewQuestion(question, model);
+      }
+    }
+    case (Question)`<Str label> <Id id> : <Type t>`:{
+      p(() {
+        text("<label>"[1..-1]);
+        switch(t){
+          
+          case (Type)`integer`:{ 
+               
+                input(\type("number"), \value("<model.env["<id>"].n>"), onChange(partial(updateInt, "<id>"))); 
+          }
 
+          case (Type)`string`:{
+                input(\type("text"), \value(model.env["<id>"].s), onChange(partial(updateStr, "<id>"))); 
+          }
+          case (Type)`boolean`:{
+                input(\type("checkbox"), \checked(model.env["<id>"].b), onClick((updateBool( "<id>",!model.env["<id>"].b)))); 
+          }
+        }
+
+
+      });
+    }
+    case (Question)`<Str label> <Id id> : <Type t> = <Expr v>`:
+      {
+      p((){
+        text("<label>"[1..-1]);
+        switch(t){
+            case (Type)`integer`:{ 
+               
+                input(\type("number"), \value("<model.env["<id>"].n>"),disabled(true)); 
+          }
+
+          case (Type)`string`:{
+                input(\type("text"), \value(model.env["<id>"].s), disabled(true)); 
+          }
+          case (Type)`boolean`:{
+                input(\type("checkbox"), \checked(model.env["<id>"].b),disabled(true)); 
+          }
+        
+        
+        }
+      });
+      
+
+
+
+    
+  }
+  }
 }

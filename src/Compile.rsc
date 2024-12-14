@@ -24,5 +24,9 @@ str compile2js(start[Form] form) {
 }
 
 HTMLElement compile2html(start[Form] form) {
-  return html([]);
+  return html([
+
+    head([title([text("<form.top.title>"[1..-1])])])
+  ]);
 }
+
