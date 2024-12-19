@@ -140,10 +140,10 @@ str exprToStr((Expr)`<Expr lhs> || <Expr rhs>`) = "(<exprToStr(lhs)> || <exprToS
 str exprToStr((Expr)`!<Expr e>`) = "(!<exprToStr(e)>)";
 str exprToStr((Expr)`<Id x>`) = "(values.get(\\\"<x>\\\")) ";
 str exprToStr((Expr)`<Int n>`) = "<n>";
-str exprToStr((Expr)`<Str s>`) = {
+str exprToStr((Expr)`<Str s>`)  {
   str aux="<s>"[1..-1];
   return "\\\"<aux>\\\"";
-};
+}
 str exprToStr((Expr)`<Bool b>`) = "<b>";
 str exprToStr((Expr)`(<Expr e>)`) = "(<exprToStr(e)>)";
 str exprToStr((Expr)`<Expr lhs> \> <Expr rhs>`) = "(<exprToStr(lhs)> \> <exprToStr(rhs)>)";

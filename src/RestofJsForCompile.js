@@ -44,10 +44,10 @@ function handleInputChange(event) {
     while (changed) {
       changed = false;
       for (let [key, value] of map1) {
-        if(key=="div_not_approvalMessage_56")console.log("looking at the fucker")
+
     
         if (map1.get(key).isEnabled && eval(map1.get(key).isEnabled)) {
-            if(key=="div_not_approvalMessage_56")console.log("trying to update the fucker")
+
             document.getElementById(key).style.visibility = "visible";
           if (value.kind == "computable") {
             var newValue=eval(value.expr);
@@ -61,14 +61,14 @@ function handleInputChange(event) {
             }
             if (values.get(value.variable) != newValue) {
               changed = true;
-              if(key=="div_not_approvalMessage_56") console.log("updating the fucker");
+
               
               values.set(value.variable, newValue);
   
               document.getElementById("input_" + key).value = newValue;
               if(value.type=='boolean')
                   document.getElementById("input_" + key).checked=newValue;
-              if(key=="div_not_approvalMessage_56")console.log("updated the fucker with "+newValue);
+
                 
             }
           } 
