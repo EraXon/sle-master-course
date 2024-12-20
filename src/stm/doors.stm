@@ -2,15 +2,19 @@ machine Doors
 
 // a comment
 
-state current
-  open => opened
-  lock => locked
+state closed
+  open => opened  lock 
+  => locked
 end
 
-state opened
-  close => current
+state opened close => closed
 end
 
 state locked
-  e => current
-end
+  unlock => 
+  
+  
+closed
+
+
+      end
