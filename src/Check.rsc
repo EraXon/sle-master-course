@@ -92,7 +92,6 @@ set[Message] checkCycles(Form form) {
         case (Question)`if ( <Expr cond> ) <Question then>`:{
             dependsControl += {<"<x>", "<q.id>", q.src>| /Id x:=cond, /Question q:=then, q has id};
             
-            //println({ "<x>"|(Expr)`<Id x>`:=cond});
         }
         case (Question)`if (<Expr cond>) <Question then> else <Question else1>`:{
             dependsControl += {<"<x>", "<q.id>", q.src>| /Id x:=cond, /Question q:=then, q has id};
