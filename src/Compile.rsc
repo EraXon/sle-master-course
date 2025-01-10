@@ -22,27 +22,29 @@ void compile(start[Form] form) {
 }
 
 str compile2js(start[Form] form) {
-  return code;
+  return code+readFile(|project://sle-master-course/src/RestofJsForCompile.js|);
 }
 
 HTMLElement compile2html(start[Form] f) {
 HTMLElement page=html([
-  head([
-    title([text("<f.top.title>"[1..-1])])
+  
+  lang::html::AST::head([
+    title([text("<f.top.title>"[1..-1])]),
+    script([],src=f.src[extension="js"].top.file)
   ]),
   body([
        h1([text("<f.top.title>"[1..-1])]),
       *[q2html(q,(Expr)`true`) | q <- f.top.questions]
-])
+    ])
   ]);
-return page;
+  return page;
 }
 
 str code="const map1 = new Map();\n const values = new Map();\n";
 
 HTMLElement q2html(Question q, Expr isEnabled) {
   HTMLElement elem;
-  println("compiling");
+
   switch(q){
     case q:(Question)`<Str l> <Id i> : <Type t>` :{
  
