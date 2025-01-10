@@ -2,19 +2,20 @@ machine Doors
 
 // a comment
 
+var isClosed = true
+
 state closed
-  open => opened  lock 
-  => locked
+  isClosed = true
+  open => opened  
+  lock => locked
 end
 
-state opened close => closed
+state opened 
+  isClosed = false
+  close => closed
 end
 
 state locked
-  unlock => 
-  
-  
-closed
-
-
-      end
+  isClosed = false
+  unlock => closed
+end
