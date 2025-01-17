@@ -33,6 +33,8 @@ Value type2default((Type)`boolean`) = vbool(false);
 // produce an environment which for each question has a default value
 // using the function type2default function defined above.
 // observe how visit traverses the form and match on normal questions and computed questions.
+
+
 VEnv initialEnv(start[Form] f) = initialEnv(f.top);
 
 VEnv initialEnv(Form f) {
@@ -111,7 +113,7 @@ VEnv eval(Form f, Input inp, VEnv venv) {
 
 // evaluate the questionnaire in one round 
 VEnv evalOnce(Form f, Input inp, VEnv venv)
-  = ( venv | eval(q, inp, it) | Question q <- f.questions );
+  = ( venv | eval(q, inp, it) | Page p<- f.pages , Section s<-p.sections,Question q <- s.questions );
 
 
 VEnv eval(Question q, Input inp, VEnv venv) {

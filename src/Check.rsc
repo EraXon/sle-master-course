@@ -68,7 +68,31 @@ Type typeOf((Expr)`!<Expr e>`, TEnv env) =(Type) `boolean`;
 
 set[Message] check(start[Form] form) = check(form.top);
 
-set[Message] check(Form form) 
+set [Message] check((Form)`form <Str t> {<Page+ pages>}`){
+    set[Message] errors = {};
+    for (Page page <- pages) {
+         Str title=page.title;
+            Form f=(Form)`form <Str title> {}`;
+            list[Question] questions = [];
+            for (section <- page.sections){
+
+                for (question <- section.questions){
+                    questions += question;
+                }
+            }
+
+            for (Question q <- questions, (Form)`form <Str t> {<Question* qqs>}` := f) {
+                f = (Form)`form <Str t> {
+                  '  <Question* qqs>
+                  '  <Question q>
+                  '}`;
+            }
+        errors += check(f);
+    }
+    return errors;
+}
+
+default set[Message] check(Form form) 
   = { *check(q, env) | Question q <- form.questions }
   + checkDuplicates(form)
   + checkCycles(form)

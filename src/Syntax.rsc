@@ -4,7 +4,8 @@ extend lang::std::Layout;
 extend lang::std::Id;
 
 start syntax Form 
-  = form: "form" Str title "{" Question* questions "}"; 
+  = organizedForm: "form" Str title "{" Page+ pages "}"|
+    simpleForm: "form" Str title "{" Question* questions "}"; 
 
 lexical Str = [\"]![\"]* [\"];
 
@@ -15,7 +16,9 @@ lexical Int = [\-]?[0-9]+ ;
 // boolean, integer, string
 syntax Type = "boolean"|"integer"|"string";
 
+syntax Page = "page" Str title "{" Section* sections "}";
 
+syntax Section = "section" Str title "{" Question* questions "}";
 // TODO: answerable question, computed question, block, if-then-else
 syntax Question 
   = ifThen: "if" "(" Expr cond ")" Question then () !>> "else" 
