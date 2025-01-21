@@ -39,6 +39,7 @@ function handleInputChange(event) {
   }
   
   
+  
   function update(){
       let changed = true;
     while (changed) {
@@ -59,7 +60,10 @@ function handleInputChange(event) {
             
             if(isNaN(newValue))newValue=0;
             }
-            if (values.get(value.variable) != newValue) {
+            let curretnValueInBox=document.getElementById("input_" + key).value;
+
+
+            if (curretnValueInBox!=newValue.toString()) {
               changed = true;
 
               
@@ -70,7 +74,7 @@ function handleInputChange(event) {
                   document.getElementById("input_" + key).checked=newValue;
 
                 
-            }
+            } 
           } 
         }else if (map1.get(key).isEnabled && !eval(map1.get(key).isEnabled)){
                 

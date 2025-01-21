@@ -11,36 +11,50 @@ import lang::html::IO; // reading/writing HTML
 
 
 void compile(start[Form] form) {
-  loc h = form.src[extension="html"];
-  loc j = form.src[extension="js"].top;
-  
-  HTMLElement ht = compile2html(form);
-  
-  writeHTMLFile(h, ht, escapeMode=extendedMode());
-  str js = compile2js(form);
-  writeFile(j, js);
+  for (Page p<-form.top.pages){
+    code="const map1 = new Map();\n const values = new Map();\n";
+    loc h = (p.src.parent+"<p.title>"[1..-1])[extension="html"];
+    loc j = (p.src.parent+"<p.title>"[1..-1])[extension="js"].top;
+    
+    HTMLElement ht = compile2html(p);
+    
+    writeHTMLFile(h, ht, escapeMode=extendedMode());
+    
+    str js = compile2js(p);
+    
+    writeFile(j, js);
+  }
 }
 
-str compile2js(start[Form] form) {
+str compile2js(Page p) {
   return code+readFile(|project://sle-master-course/src/RestofJsForCompile.js|);
 }
 
-HTMLElement compile2html(start[Form] f) {
+HTMLElement compile2html(Page p) {
 HTMLElement page=html([
   
   lang::html::AST::head([
-    title([text("<f.top.title>"[1..-1])]),
-    script([],src=f.src[extension="js"].top.file)
+    title([text("<p.title>"[1..-1])]),
+    script([],src=(p.src.parent+"<p.title>"[1..-1])[extension="js"].top.file)
   ]),
   body([
-       h1([text("<f.top.title>"[1..-1])]),
-      *[q2html(q,(Expr)`true`) | q <- f.top.questions]
+       h1([text("<p.title>"[1..-1])]),
+      *[compileSection(s)|s<-p.sections ]
     ])
   ]);
   return page;
 }
 
-str code="const map1 = new Map();\n const values = new Map();\n";
+
+HTMLElement compileSection(Section s) {
+  HTMLElement section=div([
+    h2([text("<s.title>"[1..-1])]),
+    *[q2html(q,(Expr)`true`) | q <- s.questions]
+  ]);
+  return section;
+}
+
+str code="";
 
 HTMLElement q2html(Question q, Expr isEnabled) {
   HTMLElement elem;
@@ -62,7 +76,7 @@ HTMLElement q2html(Question q, Expr isEnabled) {
       code+="values.set(\"<i>\",\"<i>\");\n";
     }
     case (Question)`<Str l> <Id i> : <Type t> = <Expr e>`:{
-      println("expresion: <e>");
+
       elem=div([
         label([text("<l>"[1..-1])]),
         typeOfInput(t, q,false)

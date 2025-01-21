@@ -84,6 +84,7 @@ void view(Model model) {
     if(Page p <- model.form.top.pages, "<p.title>" == model.currentPage){
 
       for(Section s<-p.sections){
+        h4("<s.title>"[1..-1]);
         form((){for (Question q <- s.questions) {
           viewQuestion(q, model);
         }});

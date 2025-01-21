@@ -70,6 +70,7 @@ set[Message] check(start[Form] form) = check(form.top);
 
 set [Message] check((Form)`form <Str t> {<Page+ pages>}`){
     set[Message] errors = {};
+    errors += checkDuplicatePages(pages);
     for (Page page <- pages) {
          Str title=page.title;
             Form f=(Form)`form <Str title> {}`;
@@ -88,6 +89,7 @@ set [Message] check((Form)`form <Str t> {<Page+ pages>}`){
                   '}`;
             }
         errors += check(f);
+        errors += checkDuplicateSections(page.sections);
     }
     return errors;
 }
@@ -136,6 +138,30 @@ set[Message] checkCycles(Form form) {
             errors += {error("cyclic data dependency", a)};
 
     println(dependsControl);
+    return errors;
+}
+
+set [Message] checkDuplicatePages(Page* pages) {
+    set [str] seenPages = {};
+    set[Message] errors = {};
+    for (Page page <- pages) {
+        if ("<page.title>" in seenPages) {
+            errors += { error("duplicate page", page.title.src) };
+        }
+        seenPages += {"<page.title>"};
+    }
+    return errors;
+}
+
+set [Message] checkDuplicateSections(Section* sections) {
+    set [str] seenSections = {};
+    set[Message] errors = {};
+    for (Section section <- sections) {
+        if ("<section.title>" in seenSections) {
+            errors += { warning("duplicate section", section.title.src) };
+        }
+        seenSections += {"<section.title>"};
+    }
     return errors;
 }
 
