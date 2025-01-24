@@ -35,7 +35,7 @@ list[Question] peval(Question q, VEnv venv) {
         } else if ((Expr)`false`:=peval(q.cond,venv))  {
             ;
         } else {
-            //println(q);
+            q.cond=peval(q.cond,venv);
             q.then=peval(q.then,venv)[0];
             final+=[q];
         }
@@ -137,6 +137,24 @@ Expr peval((Expr)`!<Expr e>`, VEnv env) = bexp
 default Expr peval((Expr)`!<Expr e1>`, VEnv env)
     = (Expr)`!<Expr e>`
     when Expr e := peval(e1, env);
+
+Expr peval((Expr)`(<Expr e>)`, VEnv env) = e1
+    when Expr e1 := peval(e, env), isLit(e1);
+
+
+bool isLit((Expr)`<Bool b>`) = true;
+
+bool isLit((Expr)`<Int n>`) = true;
+
+bool isLit((Expr)`<Str s>`) = true;
+
+default bool isLit((Expr)`<Expr e>`) = false;
+
+default Expr peval((Expr)`(<Expr e>)`, VEnv env)= (Expr)`(<Expr e1>)`
+    when Expr e1 := peval(e, env);
+
+
+
 
 
 
