@@ -9,8 +9,8 @@ import Syntax;
 
 str formatQL(start[Form] form) = format(form2box(form.top));
 
-Box form2box((Form)`form <Str title> { <Question* questions> }`) = V(H("form", "<title>", hs=1),
-     V([form2box(q) | Question q <- questions ], vs=2), vs=2);
+Box form2box((Form)`form <Str title> { <Question* questions> }`) = V(V(H("form", "<title>", hs=1),"{",
+     I(V([form2box(q) | Question q <- questions ], vs=2), vs=2)),"}");
 
 Box form2box((Question)`<Str label> <Id id> : <Type t>`) = I(H("<label>", "<id>", ":", "<t>", hs=1));
 
