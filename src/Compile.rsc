@@ -11,12 +11,28 @@ import lang::html::IO; // reading/writing HTML
 
 
 void compile(start[Form] form) {
+
+  list[str] pages=["<p.title>" | Page p <- form.top.pages ];
   for (Page p<-form.top.pages){
     code="const map1 = new Map();\n const values = new Map();\n";
     loc h = (p.src.parent+"<p.title>"[1..-1])[extension="html"];
     loc j = (p.src.parent+"<p.title>"[1..-1])[extension="js"].top;
     
-    HTMLElement ht = compile2html(p);
+    int currentIndex=indexOf(pages,"<p.title>");
+    str nextPage;
+    str prevPage;
+    if(currentIndex+1<size(pages)){
+        nextPage=pages[currentIndex+1];
+    }else{
+        nextPage="<p.title>";
+    }
+    if(currentIndex-1>=0){
+        prevPage=pages[currentIndex-1];
+    }else{
+        prevPage="<p.title>";
+    }
+
+    HTMLElement ht = compile2html(p,nextPage,prevPage);
     
     writeHTMLFile(h, ht, escapeMode=extendedMode());
     
@@ -30,7 +46,7 @@ str compile2js(Page p) {
   return code+readFile(|project://sle-master-course/src/RestofJsForCompile.js|);
 }
 
-HTMLElement compile2html(Page p) {
+HTMLElement compile2html(Page p,str nextPage, str prevPage) {
 HTMLElement page=html([
   
   lang::html::AST::head([
@@ -39,6 +55,8 @@ HTMLElement page=html([
   ]),
   body([
        h1([text("<p.title>"[1..-1])]),
+       a([text("next")], href=nextPage[1..-1]+".html"),
+        a([text("prev")], href=prevPage[1..-1]+".html"),
       *[compileSection(s)|s<-p.sections ]
     ])
   ]);
